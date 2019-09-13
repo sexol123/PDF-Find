@@ -18,20 +18,31 @@ namespace View
             Current.DispatcherUnhandledException += AppDispatcherUnhandledException;
 
             if (e.Args.Length == 0)
-                new SettingsWindow().Show();
-            else
             {
-                var reportDataModel = new ReportDataModel(new RegistryApplicationConfigurator());
-                var path = e.Args[0];
-                var report = reportDataModel.FindReport(path);
-                if (report == null)
-                    if (reportDataModel.FindGroup(path) != null)
-                        new PrinterSettingsWindow().Show();
-                    else
-                        reportDataModel.OpenInReader(path);
-                else
-                    reportDataModel.OpenForPrint(path, report);
+                new SettingsWindow().Show();
+                return;
             }
+            var reportDataModel = new ReportDataModel(new RegistryApplicationConfigurator());
+            var path = e.Args[0];
+            var report = reportDataModel.FindReport(path);
+            if (report != null)
+            {
+                reportDataModel.OpenForPrint(path, report);
+                return;
+            }
+
+            var groupConfiguration = reportDataModel.FindGroup(path);
+            if (groupConfiguration == null)
+            {
+                reportDataModel.OpenInReader(path);
+            }
+
+            StateReport.Instance.CurrentReportConfiguration = new ReportConfiguration
+            {
+                Group = groupConfiguration,
+                ReportName = ReportDataModel.GetReportName(path)
+            };
+            new PrinterSettingsWindow().Show();
         }
 
         public void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

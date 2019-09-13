@@ -23,5 +23,26 @@ namespace View
 		{
 			InitializeComponent();
 		}
-	}
+
+        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+
+        private void CommandBinding_CanExecute(object sender,
+                                               CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true; 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+           if( MessageBox.Show("Are you shure ?", "Close programm and cancel changes", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Cancel) == MessageBoxResult.Yes)
+            {
+                ViewModel.StateReport.Instance.CurrentReportConfiguration = null;  //to do 
+                this.Close();
+            }
+           
+        }
+    }
 }

@@ -10,7 +10,7 @@ namespace ViewModel
     {
         #region Static
 
-        private static string GetReportName(string filePath) => new PdfDocument(filePath).Info.Title;
+        public static string GetReportName(string filePath) => new PdfDocument(filePath).Info.Title;
 
         private static void CheckPdfBy(string filePath)
         {

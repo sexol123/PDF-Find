@@ -4,12 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:View"
+        xmlns:ViewModel="clr-namespace:ViewModel;assembly=ViewModel" 
+        xmlns:Model="clr-namespace:Model;assembly=Model"
         mc:Ignorable="d"
         Title="PDF Find - Settings Printer" Height="260" Width="500" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Background="Coral">
     <Window.Effect>
         <DropShadowEffect/>
     </Window.Effect>
     <Window.Resources>
+        <ViewModel:RegistryApplicationConfigurator x:Key="AppConfigurator"></ViewModel:RegistryApplicationConfigurator>
+        <local:CultureSwitcher x:Key="Resource"></local:CultureSwitcher>
         <Style TargetType="Label">
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
@@ -37,14 +41,20 @@
             <ColumnDefinition Width="28*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Label Content="Paper format:" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="140,7,80,7"></Label>
-        <ComboBox Grid.Row="1" Grid.Column="2" Width="70" Margin="0,7,7,7" HorizontalAlignment="Right"></ComboBox>
-        <RadioButton Content="Printer from list:" GroupName="CmbBox" IsChecked="True" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Height="15" Margin="0,13" ></RadioButton>
+        <Label Content="{Binding Source={StaticResource Resource}, Path=Resources.PapperFormat}"
+               Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="140,7,80,7"></Label>
+        <ComboBox Grid.Row="1" Grid.Column="2" Width="70" Margin="0,7,7,7" HorizontalAlignment="Right"
+                  SelectedItem="{Binding Source={x:Static ViewModel:StateReport.Instance}, Path=CurrentReportConfiguration.PaperFormat, Mode=TwoWay}"
+                  ItemsSource="{Binding Source={x:Static ViewModel:StateReport.Instance},Path=PaperFormats}"></ComboBox>
+        <RadioButton Content="{Binding Source={StaticResource Resource}, Path=Resources.PrinterFromList}"
+                     GroupName="CmbBox" IsChecked="True" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Height="15" Margin="0,13" ></RadioButton>
         <ComboBox Grid.Row="2" Grid.Column="2" Margin="7"></ComboBox>
-        <RadioButton Content="Manual printer:" GroupName="CmbBox" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Height="15" Margin="0,13" ></RadioButton>
-        <TextBox Grid.Row="3" Grid.Column="2" Margin="7" VerticalContentAlignment="Center"></TextBox>
-        <CheckBox Content="Duplex mode" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold"></CheckBox>
-        <Button Content="OK" Grid.Row="5" Grid.Column="2" Width="80"  Margin="10,7,10,7"></Button>
-        <Button Content="Cancel" Grid.Row="5" Grid.Column="2" Width="80"  Margin="200,7,10,7"></Button>
+        <RadioButton Content="{Binding Source={StaticResource Resource}, Path=Resources.ManualPrinter}" GroupName="CmbBox" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Height="15" Margin="0,13" ></RadioButton>
+        <TextBox Grid.Row="3" Grid.Column="2" Margin="7" VerticalContentAlignment="Center" Text="{Binding Source={x:Static ViewModel:StateReport.Instance}, Path=CurrentReportConfiguration.PrinterName , Mode=TwoWay}"></TextBox>
+        <CheckBox Content="{Binding Source={StaticResource Resource}, Path=Resources.DuplexMode}" IsChecked="{Binding Source={x:Static ViewModel:StateReport.Instance}, Path=CurrentReportConfiguration.Duplex, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold"></CheckBox>
+        <Button Content="{Binding Source={StaticResource Resource}, Path=Resources.OkButton}"
+                Command="{Binding Source={x:Static ViewModel:StateReport.Instance}, Path=SaveCommand}"
+                Grid.Row="5" Grid.Column="2" Width="80"  Margin="10,7,10,7"></Button>
+        <Button Content="{Binding Source={StaticResource Resource}, Path=Resources.CancelButton}" Grid.Row="5" Grid.Column="2" Width="80"  Margin="200,7,10,7"></Button>
     </Grid>
 </Window>
